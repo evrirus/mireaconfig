@@ -1,0 +1,42 @@
+{
+  "name": "vfs_root",
+  "type": "dir",
+  "owner": "root",
+  "children": [
+    {
+      "name": "file1.txt",
+      "type": "file",
+      "owner": "alice",
+      "content_b64": "SGVsbG8sIHRoaXMgaXMgZmlsZTEuCk5ldyBsaW5lLg=="
+    },
+    {
+      "name": "dirA",
+      "type": "dir",
+      "owner": "bob",
+      "children": [
+        {
+          "name": "deep",
+          "type": "dir",
+          "children": [
+            {
+              "name": "deepfile.bin",
+              "type": "file",
+              "content_b64": "ZGVlcCBieXRlcyA=",
+              "owner": "bob"
+            }
+          ]
+        },
+        {
+          "name": "subfile.txt",
+          "type": "file",
+          "content_b64": "0LPRi9Cz0YvQs9GL"
+        }
+      ]
+    },
+    {
+      "name": "dirB",
+      "type": "dir",
+      "children": []
+    }
+  ]
+}

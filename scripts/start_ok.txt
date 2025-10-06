@@ -1,4 +1,0 @@
-ls
-cd projects
-ls -l /tmp
-exit
