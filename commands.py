@@ -25,9 +25,8 @@ def cmd_ls(state: ShellState, args: List[str]) -> str:
     return ""
 
 def cmd_cd(state: ShellState, args: List[str]) -> str:
-    # cd path
+    # cd [path]
     if not args:
-        # go to root/home? we'll go to root
         state.current_dir = [state.vfs_root.name]
         return ""
     path = args[0]
@@ -90,7 +89,7 @@ def cmd_head(state: ShellState, args: List[str]) -> str:
     return "\n".join(out)
 
 def cmd_chown(state: ShellState, args: List[str]) -> str:
-    # chown owner path
+    # chown owner [path]
     if len(args) != 2:
         raise CommandError("chown: requires owner and path")
     owner, path = args
@@ -102,7 +101,7 @@ def cmd_chown(state: ShellState, args: List[str]) -> str:
     return ""
 
 def cmd_rmdir(state: ShellState, args: List[str]) -> str:
-    # rmdir path
+    # rmdir [path]
     if len(args) != 1:
         raise CommandError("rmdir: requires single directory path")
     path = args[0]
@@ -112,10 +111,10 @@ def cmd_rmdir(state: ShellState, args: List[str]) -> str:
         raise CommandError(str(e))
     if not node.is_dir():
         raise CommandError("rmdir: not a directory")
-    # check empty
+
     if node.children:
         raise CommandError("rmdir: directory not empty")
-    # remove from parent
+
     if len(comps) <= 1:
         raise CommandError("rmdir: cannot remove root")
     parent_comps = comps[:-1]

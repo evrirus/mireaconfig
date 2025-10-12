@@ -9,18 +9,7 @@ from exceptions import CommandError
 
 
 def load_vfs_from_json(path: str) -> Tuple[VFSDir, str]:
-    """
-    Ожидаемый формат JSON:
-    {
-      "name": "vfs_root",
-      "type": "dir",
-      "owner": "user",
-      "children": [
-         {"name":"file1.txt","type":"file","owner":"user","content_b64":"..."},
-         {"name":"subdir","type":"dir","owner":"user","children":[ ... ]}
-      ]
-    }
-    """
+
     if not os.path.isfile(path):
         raise FileNotFoundError(f"VFS file not found: {path}")
     with open(path, "r", encoding="utf-8") as f:
@@ -49,7 +38,7 @@ def _parse_vfs_node(data: dict) -> Tuple[VFSNode, str]:
         raise ValueError(f"Unknown VFS node type: {node_type}")
 
 def default_vfs() -> Tuple[VFSDir, str]:
-    # Минимальный встроенный VFS для запуска без файла
+
     root = VFSDir(name="root", owner="root")
     root.add_child(VFSFile("readme.txt", content_b64=base64.b64encode(b"Welcome to VFS emulator\n").decode()))
     etc = VFSDir("etc")
@@ -64,10 +53,7 @@ def default_vfs() -> Tuple[VFSDir, str]:
 
 
 def simple_parse(line: str) -> Tuple[str, List[str]]:
-    """
-    Разделяет по пробелам на команду и аргументы.
-    (Соответствует требованию: простой парсер)
-    """
+
     parts = [p for p in line.strip().split(" ") if p != ""]
     if not parts:
         return "", []
@@ -84,9 +70,10 @@ COMMANDS = {
     "chown": cmd_chown,
     "rmdir": cmd_rmdir,
 }
-# -------------------------
-# REPL и выполнение строк
-# -------------------------
+
+
+
+
 def execute_command_line(state: ShellState, line: str) -> str:
     cmd_name, args = simple_parse(line)
     if cmd_name == "":
@@ -116,9 +103,7 @@ def run_repl(state: ShellState):
     except KeyboardInterrupt:
         print("\nInterrupted. Exiting.")
 
-# -------------------------
-# Стартовый скрипт
-# -------------------------
+
 def execute_startup_script(state: ShellState, script_path: str) -> None:
     if not os.path.isfile(script_path):
         raise FileNotFoundError(f"Startup script not found: {script_path}")
@@ -126,7 +111,6 @@ def execute_startup_script(state: ShellState, script_path: str) -> None:
         lines = f.readlines()
     for raw in lines:
         line = raw.rstrip("\n")
-        # echo the input as if user typed it
         print(f"{state.vfs_name}:{state.cwd_str()}$ {line}")
         try:
             out = execute_command_line(state, line)
@@ -136,5 +120,4 @@ def execute_startup_script(state: ShellState, script_path: str) -> None:
             print(f"Error: {ce}")
             raise RuntimeError(f"Startup script stopped due to error: {ce}")
         except SystemExit:
-            # exit in script -> terminate
             raise SystemExit(0)

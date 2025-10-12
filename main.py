@@ -13,14 +13,14 @@ def main(argv=None):
     parser.add_argument("--user", help="Current user name (whoami)", default="guest")
     args = parser.parse_args(argv)
 
-    # Debug: display received parameters (requirement этапа 2)
+
     print("Debug: startup parameters:")
     print(f"  vfs: {args.vfs}")
     print(f"  startup: {args.startup}")
     print(f"  vfs_name override: {args.vfs_name}")
     print(f"  user: {args.user}")
 
-    # Load VFS
+
     if args.vfs:
         try:
             vfs_root, vfs_name = load_vfs_from_json(args.vfs)
@@ -35,7 +35,8 @@ def main(argv=None):
 
     state = ShellState(vfs_root=vfs_root, vfs_name=vfs_name, current_user=args.user)
 
-    # Execute startup script if provided
+
+
     if args.startup:
         try:
             execute_startup_script(state, args.startup)
@@ -46,7 +47,7 @@ def main(argv=None):
             print(f"Error during startup script execution: {e}")
             sys.exit(1)
 
-    # Start interactive REPL
+
     run_repl(state)
 
 if __name__ == "__main__":

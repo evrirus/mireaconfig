@@ -8,24 +8,18 @@ class ShellState:
     def __init__(self, vfs_root: VFSDir, vfs_name: str, current_user: str = "guest"):
         self.vfs_root = vfs_root
         self.vfs_name = vfs_name
-        self.current_dir: List[str] = [vfs_root.name]  # path components from root (root included)
+        self.current_dir: List[str] = [vfs_root.name]
         self.current_user = current_user
 
     def resolve_path(self, path: str) -> Tuple[VFSNode, List[str]]:
-        """
-        Простой путь:
-        - Абсолютный: начинается с '/'
-        - Относительный: относительно текущей директории
-        - '..' поддерживается
-        Возвращает (node, full_path_components)
-        """
+
         if path == "":
             # текущая директория
             node = self._node_by_components(self.current_dir)
             return node, list(self.current_dir)
         comps = path.split("/")
         if path.startswith("/"):
-            comps = [c for c in comps if c]  # drop leading empty
+            comps = [c for c in comps if c]
             start = [self.vfs_root.name]
         else:
             comps = [c for c in comps if c]
@@ -38,7 +32,7 @@ class ShellState:
                 if len(stack) > 1:
                     stack.pop()
                 continue
-            # descend
+
             node = self._node_by_components(stack)
             if not isinstance(node, VFSDir):
                 raise NotADirectoryError(f"'{ '/'.join(stack) }' is not a directory")
@@ -64,5 +58,4 @@ class ShellState:
         return node
 
     def cwd_str(self) -> str:
-        # Return path like /root/home/alice
-        return "/" + "/".join(self.current_dir[1:])  # omit root name in leading slash for nicer format
+        return "/" + "/".join(self.current_dir[1:])

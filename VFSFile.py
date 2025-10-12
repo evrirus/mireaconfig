@@ -6,7 +6,7 @@ from VFSNode import VFSNode
 class VFSFile(VFSNode):
     def __init__(self, name: str, content_b64: str = "", owner: str = "root"):
         super().__init__(name, owner)
-        self.content_b64 = content_b64  # base64 encoded content
+        self.content_b64 = content_b64
 
     def is_file(self) -> bool:
         return True
